@@ -171,8 +171,6 @@ public class persistenceFile extends HttpServlet{
       +"\" value=\""+major+"\" size=30 required></td>");
      out.println("  </tr>");
      out.println(" </table>");
-     out.println(" <br>");
-     out.println(" <br>");
      
      out.println(" <input type=\"submit\" value=\"" + OperationAdd
       + "\" name=\"Operation\">");
