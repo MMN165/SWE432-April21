@@ -8,7 +8,7 @@
     var servletURL = window.location.origin + "/persistenceFile";
   </script>
  <title>First JSP</title>
-</head>
+</head> 
   
 <%@ page import="java.util.Date" %>
 <body>
