@@ -163,15 +163,15 @@ public class persistenceFile extends HttpServlet{
       +age+"\" size=3 required></td>");
      out.println("  </tr>");
      out.println(" </table>");
-     out.println(" <br>");
-     out.println(" <br>");
      
      out.println("   <td>Major:</td>");
      out.println("   <td><input type=\"text\" name=\""+Data.MAJOR.name()
       +"\" value=\""+major+"\" size=30 required></td>");
      out.println("  </tr>");
      out.println(" </table>");
-     
+     out.println(" <br>");
+     out.println(" <br>");
+    
      out.println(" <input type=\"submit\" value=\"" + OperationAdd
       + "\" name=\"Operation\">");
      out.println(" <input type=\"reset\" value=\"Reset\" name=\"reset\">");
