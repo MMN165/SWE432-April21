@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
   <script>
-    var servletURL = window.location.origin + "/persistenceFile";
+    var servletURL = window.location.origin + "/file";
   </script>
  <title>First JSP</title>
 </head> 
