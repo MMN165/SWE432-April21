@@ -1,238 +1,98 @@
-package servlet;
-// Written by David Gonzalez, April 2020
-// Modified by Jeff Offutt
-// Built to deploy in github with Heroku
+// From "Professional Java Server Programming", Patzer et al.,
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.io.PrintWriter;
-import java.io.IOException;
-import java.io.FileNotFoundException;
+// Import Servlet Libraries
+import javax.servlet.*;
+import javax.servlet.http.*;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.annotation.WebServlet;
+// Import Java Libraries
+import java.io.*;
+import java.util.Date;
 
 @WebServlet(name = "FilePersistence", urlPatterns = {"/file"})
-public class persistenceFile extends HttpServlet{
-  static enum Data {AGE, NAME, MAJOR};
-  static String RESOURCE_FILE = "entries.txt";
-  static final String VALUE_SEPARATOR = ";";
+public class sessionLifeCycle extends HttpServlet
+{
+public void doGet (HttpServletRequest request, HttpServletResponse response)
+       throws ServletException, IOException
+{
+   String action = request.getParameter("action");
 
-  static String Domain  = "";
-  static String Path    = "/";
-  static String Servlet = "file";
+   if (action != null && action.equals("invalidate"))
+   {  // Called from the invalidate button, kill the session.
+      // Get session object
+      HttpSession session = request.getSession();
+      session.invalidate();
 
-  // Button labels
-  static String OperationAdd = "Add";
+      response.setContentType("text/html");
+      PrintWriter out = response.getWriter();
 
-  // Other strings.
+      out.println("<html>");
+      out.println("<head>");
+      out.println(" <title>Session lifecycle</title>");
+      out.println("</head>");
+      out.println("");
+      out.println("<body>");
 
-  /** *****************************************************
-   *  Overrides HttpServlet's doPost().
-   *  Converts the values in the form, performs the operation
-   *  indicated by the submit button, and sends the results
-   *  back to the client.
-  ********************************************************* */
-  @Override
-  public void doPost (HttpServletRequest request, HttpServletResponse response)
-     throws ServletException, IOException
-  {
-     String name = request.getParameter(Data.NAME.name());
-     String age = request.getParameter(Data.AGE.name());
-     String major = request.getParameter(Data.MAJOR.name());
-     
-     String error = "";
-     if(name == null){
-       error= "<li>Name is required</li>";
-       name = "";
-     }
+      out.println("<p>Your session has been invalidated.</P>");
 
-     if(age == null){
-       error+= "<li>Age is required.<li>";
-       age = "";
-       
-     }
-     if(major == null){
-    	 error+= "<li>Major is required.<li>";
-    	 age = "";
-     }else{
-          try{
-            Integer ageInteger =new Integer(age);
-            if(ageInteger<1){
-                error+= "<li>Age must be an integer greater than 0.</li>";
-                age = "";
-            }else{
-              if(ageInteger>150){
-                  error+= "<li>Age must be an integer less than 150.</li>";
-                  age = "";
-              }
-            }
-          }catch (Exception e) {
-            error+= "<li>Age must be an integer greater than 0.</li>";
-            age = "";
-          }
-     }
+      // Create a link so the user can create a new session.
+      // The link will have a parameter builtin
+      String lifeCycleURL = "/offutt/servlet/sessionLifeCycle";
+      out.println("<a href=\"" + lifeCycleURL + "?action=newSession\">");
+      out.println("Create new session</A>");
 
-     response.setContentType("text/html");
-     PrintWriter out = response.getWriter();
+      out.println("</body>");
+      out.println("</html>");
+      out.close();
+   } //end if
+   else
+   {  // We were called either directly or through the reload button.
+      // Get session object
+      HttpSession session = request.getSession();
 
-     if (error.length() == 0){
-       PrintWriter entriesPrintWriter = new PrintWriter(new FileWriter(RESOURCE_FILE, true), true);
-       entriesPrintWriter.println(name+VALUE_SEPARATOR+age+VALUE_SEPARATOR+major);
-       entriesPrintWriter.close();
+      response.setContentType("text/html");
+      PrintWriter out = response.getWriter();
 
-       PrintHead(out);
-       PrintResponseBody(out, RESOURCE_FILE);
-       PrintTail(out);
-     }else{
-       PrintHead(out);
-       PrintBody(out, name, age, major, error);
-       PrintTail(out);
-     }
-  }
+      out.println("<html>");
+      // no-cache lets the page reload by clicking on the reload link
+      out.println("<meta http-equiv=\"Pragma\" content=\"no-cache\">");
+      out.println("<head>");
+      out.println(" <title>Session lifecycle</title>");
+      out.println("</head>");
+      out.println("");
 
-  /** *****************************************************
-   *  Overrides HttpServlet's doGet().
-   *  Prints an HTML page with a blank form.
-  ********************************************************* */
-  @Override
-  public void doGet (HttpServletRequest request, HttpServletResponse response)
-         throws ServletException, IOException{
-     response.setContentType("text/html");
-     PrintWriter out = response.getWriter();
-     PrintHead(out);
-     PrintBody(out, "", "", "", "");
-     PrintTail(out);
-  }
+      out.println("<body>");
+      out.println("<h1><center>Session life cycle</center></h1>");
+      out.print  ("<BR>Session status: ");
+      if (session.isNew())
+      {
+         out.println ("New session.");
+      }
+      else
+      {
+         out.println ("Old session.");
+      }
+      // Get the session ID
+      out.print  ("<br>Session ID: ");
+      out.println(session.getId());
+      // Get the created time, convert it to a Date object
+      out.print  ("<br>Creation time: ");
+      out.println(new Date (session.getCreationTime()));
+      // Get the last time it was accessed
+      out.print  ("<br>Last accessed time: ");
+      out.println(new Date(session.getLastAccessedTime()));
+      // Get the max-inactive-interval setting
+      out.print  ("<br>Maximum inactive interval (seconds): ");
+      out.println(session.getMaxInactiveInterval());
 
-  /** *****************************************************
-   *  Prints the <head> of the HTML page, no <body>.
-  ********************************************************* */
-  private void PrintHead (PrintWriter out){
-     out.println("<html>");
-     out.println("");
-     out.println("<head>");
-     out.println("<title>File Persistence Example</title>");
-     // Put the focus in the name field
-     out.println ("<script>");
-     out.println ("  function setFocus(){");
-     out.println ("    document.persist2file.NAME.focus();");
-     out.println ("  }");
-     out.println ("</script>");
-     out.println("</head>");
-     out.println("");
-  }
+      String lifeCycleURL = "/offutt/servlet/sessionLifeCycle";
+      out.print  ("<br><br><a href=\"" + lifeCycleURL + "?action=invalidate\">");
+      out.println("Invalidate the session</a>");
+      out.print  ("<br><a href=\"" + lifeCycleURL + "\">");
+      out.println("Reload this page</a>");
 
-  /** *****************************************************
-   *  Prints the <BODY> of the HTML page
-  ********************************************************* */
-  private void PrintBody (PrintWriter out, String name, String age, String major, String error){
-     out.println("<body onLoad=\"setFocus()\">");
-     out.println("<p>");
-     // out.println("<b>Name:</b> Megan Ngo");
-     out.println("<br>A simple example that demonstrates how to persist data to a file");
-     out.println("</p>");
-
-     if(error != null && error.length() > 0){
-       out.println("<p style=\"color:red;\">Please correct the following and resubmit.</p>");
-       out.println("<ol>");
-       out.println(error);
-       out.println("</ol>");
-     }
-
-     out.print  ("<form name=\"persist2file\" method=\"post\"");
-     out.println(" action=\""+Domain+Path+Servlet+"\">");
-     out.println("");
-     out.println(" <table>");
-     out.println("  <tr>");
-     out.println("   <td>Name:</td>");
-     out.println("   <td><input type=\"text\" name=\""+Data.NAME.name()
-      +"\" value=\""+name+"\" size=30 required></td>");
-     out.println("  </tr>");
-     out.println("  <tr>");
-     
-     out.println("   <td>Age:</td>");
-     out.println("   <td><input type=\"text\"  name=\""+Data.AGE.name()
-      +"\" oninput=\"this.value=this.value.replace(/[^0-9]/g,'');\" value=\""
-      +age+"\" size=3 required></td>");
-     out.println("  </tr>");
-     out.println(" </table>");
-     
-     out.println("   <td>Major:</td>");
-     out.println("   <td><input type=\"text\" name=\""+Data.MAJOR.name()
-      +"\" value=\""+major+"\" size=30 required></td>");
-     out.println("  </tr>");
-     out.println(" </table>");
-     out.println(" <br>");
-     out.println(" <br>");
-    
-     out.println(" <input type=\"submit\" value=\"" + OperationAdd
-      + "\" name=\"Operation\">");
-     out.println(" <input type=\"reset\" value=\"Reset\" name=\"reset\">");
-     out.println("</form>");
-     out.println("");
-     out.println("</body>");
-  }
-
-  /** *****************************************************
-   *  Prints the <BODY> of the HTML page
-  ********************************************************* */
-  private void PrintResponseBody (PrintWriter out, String resourcePath){
-    out.println("<body onLoad=\"setFocus()\">");
-    out.println("<p>");
-    out.println("A simple example that demonstrates how to persist data to a file");
-    out.println("</p>");
-    out.println("");
-    out.println(" <table>");
-
-    try {
-        out.println("  <tr>");
-        out.println("   <th>Name</th>");
-        out.println("   <th>Age</th>");
-        out.println("   <th>Major</th>");
-        out.println("  </tr>");
-        File file = new File(resourcePath);
-        if(!file.exists()){
-          out.println("  <tr>");
-          out.println("   <td>No entries persisted yet.</td>");
-          out.println("  </tr>");
-          return;
-        }
-
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-          String []  entry= line.split(VALUE_SEPARATOR);
-          out.println("  <tr>");
-          for(String value: entry){
-              out.println("   <td>"+value+"</td>");
-          }
-          out.println("  </tr>");
-        }
-        bufferedReader.close();
-      } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-     out.println(" </table>");
-     out.println("");
-     out.println("</body>");
-  }
-
-  /** *****************************************************
-   *  Prints the bottom of the HTML page.
-  ********************************************************* */
-  private void PrintTail (PrintWriter out){
-     out.println("");
-     out.println("</html>");
-  }
-}
-
+      out.println("</body>");
+      out.println("</html>");
+      out.close();
+   } //end else
+} // End doGet
+} //End  sessionLifeCycle
