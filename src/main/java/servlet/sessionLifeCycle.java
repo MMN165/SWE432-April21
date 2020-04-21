@@ -8,7 +8,6 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.util.Date;
 
-@WebServlet(name = "sessionLifeCycle", urlPatterns = {"/file"})
 public class sessionLifeCycle extends HttpServlet
 {
 public void doGet (HttpServletRequest request, HttpServletResponse response)
