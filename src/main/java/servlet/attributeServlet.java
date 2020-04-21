@@ -81,7 +81,7 @@ public void doGet (HttpServletRequest request, HttpServletResponse response)
    out.println("Enter name and value of an attribute");
 
    // String url = response.encodeURL ("offutt/servlet/attributeServlet");
-   String url = response.encodeURL("attributeServlet");
+   String url = response.encodeURL("servlet");
    out.println("<form action=\"" + url + "\" method=\"GET\">");
    out.println(" Name: ");
    out.println(" <input type=\"text\" size=\"10\" name=\"attrib_name\">");
@@ -93,6 +93,14 @@ public void doGet (HttpServletRequest request, HttpServletResponse response)
    out.println(" <input type=\"submit\" name=\"update\" value=\"Update\">");
    out.println("</form>");
    out.println("<hr>");
+       
+       
+       out.println("<br>");
+         String lifeCycleURL = "/servlet"; // --------------------------------------------
+      out.print  ("<br><br><a href=\"" + lifeCycleURL + "?action=invalidate\">");
+      out.println("Invalidate the session</a>");
+       out.println("<br>");
+       
        
    out.println("Attributes in this session:");
    Enumeration e = session.getAttributeNames();
