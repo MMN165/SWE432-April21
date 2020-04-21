@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.annotation.WebServlet;
 
-@WebServlet(name = "sessionLifeCycle", urlPatterns = {"/servlet"})
+@WebServlet(name = "servlet", urlPatterns = {"/servlet"})
 public class sessionLifeCycle extends HttpServlet
 {
 
