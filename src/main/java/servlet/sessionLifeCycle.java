@@ -21,7 +21,7 @@ public class sessionLifeCycle extends HttpServlet
 
   static String Domain  = "";
   static String Path    = "/";
-  static String Servlet = "servlet";
+  static String Servlet = "sessionLifeCycle";
   
 public void doGet (HttpServletRequest request, HttpServletResponse response)
        throws ServletException, IOException
