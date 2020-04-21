@@ -29,11 +29,6 @@ public void doGet (HttpServletRequest request, HttpServletResponse response)
    String value  = request.getParameter("attrib_value");
    String remove = request.getParameter("attrib_remove");
 
-   if (remove != null && remove.equals("on"))
-   {
-      session.removeAttribute(name);
-   }
-   
       String action = request.getParameter("action");
 
    if (action != null && action.equals("invalidate"))
@@ -53,7 +48,11 @@ public void doGet (HttpServletRequest request, HttpServletResponse response)
 
       out.println("<p>Your session has been invalidated.</P>");
       }
-   
+      
+   if (remove != null && remove.equals("on"))
+   {
+      session.removeAttribute(name);
+   }
    
    else
    {
@@ -92,15 +91,15 @@ public void doGet (HttpServletRequest request, HttpServletResponse response)
    out.println(" <br><input type=\"checkbox\" name=\"attrib_remove\">Remove");
    out.println(" <input type=\"submit\" name=\"update\" value=\"Update\">");
    out.println("</form>");
-   out.println("<hr>");
-       
-       
-       out.println("<br>");
-         String lifeCycleURL = "/servlet"; // --------------------------------------------
+   
+   
+            String lifeCycleURL = "/servlet"; // --------------------------------------------
       out.print  ("<br><br><a href=\"" + lifeCycleURL + "?action=invalidate\">");
       out.println("Invalidate the session</a>");
        out.println("<br>");
        
+       
+   out.println("<hr>");
        
    out.println("Attributes in this session:");
    Enumeration e = session.getAttributeNames();
