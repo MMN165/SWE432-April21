@@ -8,8 +8,21 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.util.Date;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.annotation.WebServlet;
+
+@WebServlet(name = "sessionLifeCycle", urlPatterns = {"/file"})
 public class sessionLifeCycle extends HttpServlet
 {
+
+  static String Domain  = "";
+  static String Path    = "/";
+  static String Servlet = "file";
+  
 public void doGet (HttpServletRequest request, HttpServletResponse response)
        throws ServletException, IOException
 {
