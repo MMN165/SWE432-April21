@@ -93,11 +93,7 @@ public void doGet (HttpServletRequest request, HttpServletResponse response)
    out.println(" <input type=\"submit\" name=\"update\" value=\"Update\">");
    out.println("</form>");
    out.println("<hr>");
-   
-         String lifeCycleURL = "/servlet"; // --------------------------------------------
-      out.print  ("<br><br><a href=\"" + lifeCycleURL + "?action=invalidate\">");
-      out.println("Invalidate the session</a>");
-
+       
    out.println("Attributes in this session:");
    Enumeration e = session.getAttributeNames();
    while (e.hasMoreElements())
