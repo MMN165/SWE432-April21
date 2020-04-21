@@ -96,7 +96,7 @@ public void doGet (HttpServletRequest request, HttpServletResponse response)
       out.print  ("<br>Maximum inactive interval (seconds): ");
       out.println(session.getMaxInactiveInterval());
 
-      String lifeCycleURL = "/offutt/servlet/sessionLifeCycle";
+      String lifeCycleURL = "/file/servlet/sessionLifeCycle";
       out.print  ("<br><br><a href=\"" + lifeCycleURL + "?action=invalidate\">");
       out.println("Invalidate the session</a>");
       out.print  ("<br><a href=\"" + lifeCycleURL + "\">");
