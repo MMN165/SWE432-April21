@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.annotation.WebServlet;
 
-@WebServlet(name = "servlet", urlPatterns = {"/servlet"})
+@WebServlet(name = "sessionLifeCycle", urlPatterns = {"/servlet"})
 public class sessionLifeCycle extends HttpServlet
 {
 
@@ -48,7 +48,7 @@ public void doGet (HttpServletRequest request, HttpServletResponse response)
 
       // Create a link so the user can create a new session.
       // The link will have a parameter builtin
-      String lifeCycleURL = "/servlet/sessionLifeCycle";
+      String lifeCycleURL = "/servlet/sessionLifeCycle.java";
       out.println("<a href=\"" + lifeCycleURL + "?action=newSession\">");
       out.println("Create new session</A>");
 
@@ -96,7 +96,7 @@ public void doGet (HttpServletRequest request, HttpServletResponse response)
       out.print  ("<br>Maximum inactive interval (seconds): ");
       out.println(session.getMaxInactiveInterval());
 
-      String lifeCycleURL = "/servlet/sessionLifeCycle";
+      String lifeCycleURL = "/servlet/sessionLifeCycle.java";
       out.print  ("<br><br><a href=\"" + lifeCycleURL + "?action=invalidate\">");
       out.println("Invalidate the session</a>");
       out.print  ("<br><a href=\"" + lifeCycleURL + "\">");
